@@ -29,8 +29,7 @@ public class UnitOfMeasureCommandToUnitOfMeasureTest {
         assertNotNull(converter.convert(new UnitOfMeasureCommand()));
     }
 
-    @Test
-    public void convert() throws Exception {
+    @Test public void convert() throws Exception {
         // given
         UnitOfMeasureCommand command = new UnitOfMeasureCommand();
         command.setId(LONG_VALUE);
