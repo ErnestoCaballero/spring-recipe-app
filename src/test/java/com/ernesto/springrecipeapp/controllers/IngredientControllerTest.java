@@ -1,7 +1,9 @@
 package com.ernesto.springrecipeapp.controllers;
 
+import com.ernesto.springrecipeapp.commands.IngredientCommand;
 import com.ernesto.springrecipeapp.commands.RecipeCommand;
 import com.ernesto.springrecipeapp.domain.Recipe;
+import com.ernesto.springrecipeapp.services.IngredientService;
 import com.ernesto.springrecipeapp.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class IngredientControllerTest {
 
     @Mock
+    IngredientService ingredientService;
+
+    @Mock
     RecipeService recipeService;
 
     IngredientController controller;
@@ -29,7 +34,7 @@ public class IngredientControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        controller = new IngredientController(recipeService);
+        controller = new IngredientController(recipeService, ingredientService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -47,5 +52,20 @@ public class IngredientControllerTest {
 
         // then
         verify(recipeService, times(1)).findCommandById(anyLong());
+    }
+
+    @Test
+    public void testShowIngredient() throws Exception {
+        // given
+        IngredientCommand ingredientCommand = new IngredientCommand();
+
+        // when
+        when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientCommand);
+
+        // then
+        mockMvc.perform(get("/recipe/1/ingredient/2/show"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredient/show"))
+                .andExpect(model().attributeExists("ingredient"));
     }
 }
