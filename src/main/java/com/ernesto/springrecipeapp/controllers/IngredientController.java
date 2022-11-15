@@ -1,6 +1,8 @@
 package com.ernesto.springrecipeapp.controllers;
 
 import com.ernesto.springrecipeapp.commands.IngredientCommand;
+import com.ernesto.springrecipeapp.commands.RecipeCommand;
+import com.ernesto.springrecipeapp.commands.UnitOfMeasureCommand;
 import com.ernesto.springrecipeapp.services.IngredientService;
 import com.ernesto.springrecipeapp.services.RecipeService;
 import com.ernesto.springrecipeapp.services.UnitOfMeasureService;
@@ -42,6 +44,27 @@ public class IngredientController {
                 Long.valueOf(id)));
 
         return "recipe/ingredient/show";
+    }
+
+    @GetMapping
+    @RequestMapping("recipe/{recipeId}/ingredient/new")
+    public String newIngredient(@PathVariable String recipeId, Model model) {
+        // make sure we have a good id value
+        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+        // todo raise exception if null
+
+        // need to return back parent id for hidden form property
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.valueOf(recipeId));
+        model.addAttribute("ingredient", ingredientCommand);
+
+        // unit of measure
+        ingredientCommand.setUom(new UnitOfMeasureCommand());
+
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+
+        return "recipe/ingredient/ingredientform";
+
     }
 
     @GetMapping
