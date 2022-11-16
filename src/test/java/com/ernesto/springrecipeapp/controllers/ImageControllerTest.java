@@ -59,7 +59,7 @@ public class ImageControllerTest {
     @Test
     public void handleImagePost() throws Exception {
         MockMultipartFile multipartFile =
-                new MockMultipartFile("file", "testing.txt", "text/plain",
+                new MockMultipartFile("imagefile", "testing.txt", "text/plain",
                         "Spring Framework Guru".getBytes());
 
         mockMvc.perform(multipart("/recipe/1/image").file(multipartFile))
